@@ -16,6 +16,15 @@ def estimate_motion(file_path, estimator):
   vidID = file_path.split("/")[-1].split(".")[0]
   return vidID, motion_est
 
+def get_dataset(dataset_path):
+  vids = None
+  if dataset_path.endswith(".csv"):
+    # TODO: csv option for inputting video links
+    pass
+  else:  # local mp4 dataset
+    vids = glob.glob(os.path.join(dataset_path, "*.mp4"))
+  return vids
+
 def write_to_csv(results, output_path):
   with open(output_path, 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
@@ -27,6 +36,7 @@ def write_to_csv(results, output_path):
 if __name__ == "__main__":
   parser = argparse.ArgumentParser(description="Estimate values from mp4 files.")
   parser.add_argument("--dataset", type=str, help="Path to the dataset directory containing mp4 files.")
+  parser.add_argument("--max-samples", default=-1, type=int, help="# of videos to use from dataset")
   parser.add_argument("--estimator-cfg", default="sparse_OF", type=str, help="Either string with est. class name or .json file with 'target' and 'params' entries")
   parser.add_argument("--output", default="./estimates.csv", type=str, help="Where to write estimates")
   parser.add_argument("--parallelism", type=int, default=multiprocessing.cpu_count(), help="Number of processes to use for parallel computation.")
@@ -42,9 +52,12 @@ if __name__ == "__main__":
     estimator_cls = eval(args.estimator_cfg)
 
   estimator = partial(estimator_cls, **estimator_args)
+  print(f"Using estimator {args.estimator_cfg} with params {estimator_args}")
 
   # Get mp4s
-  vids = glob.glob(os.path.join(args.dataset, "*.mp4"))[:5]
+  vids = get_dataset(args.dataset)
+  vids = vids if args.max_samples == -1 else vids[:args.max_samples]
+  print(f"Estimating {len(vids)} videos")
 
   # Compute estimates
   t0 = time.time()

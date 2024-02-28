@@ -1,0 +1,7 @@
+{
+  "target": "dense_OF",
+  "params": {
+    "downsample_factor": 4,
+    "target_fps": 10
+  }
+}
