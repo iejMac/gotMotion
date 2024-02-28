@@ -22,7 +22,7 @@ def scatter(motion_est, motion_gt):
     plt.show()
 
 
-def ranking(motion_est, motion_gt)
+def ranking(motion_est, motion_gt):
     # Sort both arrays based on motion_est
     indices_sorted_by_motion = np.argsort(motion_est)
     sorted_gt = motion_gt[indices_sorted_by_motion]
@@ -30,9 +30,9 @@ def ranking(motion_est, motion_gt)
     # Apply percentile-based normalization
     low_percentile = np.percentile(sorted_gt, 25)
     high_percentile = np.percentile(sorted_gt, 75)
-    normalized_gt = (sorted_opt_flows - low_percentile) / (high_percentile - low_percentile)
+    normalized_gt = (sorted_gt - low_percentile) / (high_percentile - low_percentile)
     # Clip values to [0, 1] to ensure they fall within the colormap range
-    normalized_gt = np.clip(normalized_opt_flows, 0, 1)
+    normalized_gt = np.clip(normalized_gt, 0, 1)
 
     # Create a colormap from blue to red
     colormap = plt.cm.get_cmap('coolwarm')
