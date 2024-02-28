@@ -4,11 +4,12 @@ import csv
 import glob
 import json
 import multiprocessing
+import numpy as np
 import os
 import time
 
 from functools import partial
-from methods import dense_OF, sparse_OF, compression_estimator
+from methods import dense_OF, sparse_OF, compression_estimator, compression_features
 
 
 def estimate_motion(file_path, estimator):
@@ -28,7 +29,15 @@ def get_dataset(dataset_path):
 def write_to_csv(results, output_path):
   with open(output_path, 'w', newline='') as csvfile:
     writer = csv.writer(csvfile)
-    writer.writerow(['vidID', 'motion_estimate'])
+
+    samp_id, samp_res = results[0]
+    if isinstance(samp_res, dict):
+      csv_schema = ['vidID'] + list(samp_res.keys())
+      results = [[v_id] + list(feat.values()) for v_id, feat in results]
+    else:
+      csv_schema = ['vidID', 'motion_estimate']
+
+    writer.writerow(csv_schema)
     for result in results:
       writer.writerow(result)
 
