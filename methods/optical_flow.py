@@ -1,7 +1,9 @@
 # based on https://docs.opencv.org/4.x/d4/dee/tutorial_optical_flow.html
 import cv2 as cv
+import numpy as np
 
-def get_dense_optical_flow(file_path, downsample_factor=1, target_fps=-1):
+
+def dense_OF(file_path, downsample_factor=1, target_fps=-1):
     cap = cv.VideoCapture(file_path)
     fps = cap.get(cv.CAP_PROP_FPS)
     frame_skip = 1 if target_fps == -1 else round(fps / target_fps)
@@ -32,7 +34,7 @@ def get_dense_optical_flow(file_path, downsample_factor=1, target_fps=-1):
     return np.mean(mags)
 
 
-def get_sparse_optical_flow(file_path):
+def sparse_OF(file_path):
     cap = cv.VideoCapture(file_path)
     # Parameters for ShiTomasi corner detection
     feature_params = dict(maxCorners=100,

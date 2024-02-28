@@ -1,7 +1,7 @@
 import os
 import subprocess
 
-def estimate_motion(file_path):
+def compression_estimator(file_path):
     # Get frame data and stream information using ffprobe
     frame_command = f"ffprobe -show_frames -v error -select_streams v:0 {file_path}"
     stream_command = f"ffprobe -show_streams -v error -select_streams v:0 {file_path}"
