@@ -27,7 +27,8 @@ def dense_OF(file_path, downsample_factor=1, target_fps=-1):
         frame2 = cv.resize(frame2, (frame2.shape[1] // downsample_factor, frame2.shape[0] // downsample_factor)) if downsample_factor != 1 else frame2
         next = cv.cvtColor(frame2, cv.COLOR_BGR2GRAY)
         flow = cv.calcOpticalFlowFarneback(prvs, next, None, 0.5, 3, 15, 3, 5, 1.2, 0)
-        mag = np.mean(cv.cartToPolar(flow[..., 0], flow[..., 1])[0])
+        mag = np.linalg.norm(flow, axis=-1).mean(axis=(0, 1))
+        # mag = np.mean(cv.cartToPolar(flow[..., 0], flow[..., 1])[0])
         mags.append(mag)
         prvs = next
 
